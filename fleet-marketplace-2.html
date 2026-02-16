@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BluePrint Fleet - Equipment & Vehicle Rental Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #151b2e;
+            --bg-tertiary: #1e2740;
+            --accent-primary: #00d9ff;
+            --accent-secondary: #7c3aed;
+            --accent-gradient: linear-gradient(135deg, #00d9ff 0%, #7c3aed 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --text-muted: #718096;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 40px 100px rgba(0, 0, 0, 0.6);
+        }
+
+        .light-mode {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --accent-primary: #0891b2;
+            --accent-secondary: #7c3aed;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.1);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 40px 100px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .light-mode nav {
+            background: rgba(248, 250, 252, 0.95);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .hero-text h1 .gradient-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .equipment-showcase {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .equipment-card {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-primary);
+        }
+
+        .equipment-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-primary));
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .equipment-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .equipment-card:hover .equipment-image::before {
+            left: 100%;
+        }
+
+        .equipment-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .equipment-price {
+            color: var(--accent-primary);
+            font-weight: 800;
+            font-size: 1.3rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .equipment-available {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Problem Statement Section */
+        .section {
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 5rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--accent-primary);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
+
+        .problem-card {
+            background: var(--bg-secondary);
+            padding: 3rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .problem-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .problem-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .problem-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--accent-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .problem-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .problem-card p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: var(--bg-secondary);
+            border-radius: 40px;
+            padding: 5rem;
+            border: 1px solid var(--border);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 16.66%;
+            right: 16.66%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            z-index: 0;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 120px;
+            height: 120px;
+            background: var(--accent-gradient);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.4);
+            position: relative;
+            transform: rotate(-5deg);
+            transition: all 0.4s ease;
+        }
+
+        .step-card:hover .step-number {
+            transform: rotate(0deg) scale(1.1);
+        }
+
+        .step-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .step-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Equipment Categories */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-card {
+            background: var(--bg-secondary);
+            padding: 2.5rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .category-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            filter: grayscale(0.5);
+            transition: filter 0.3s ease;
+        }
+
+        .category-card:hover .category-icon {
+            filter: grayscale(0);
+        }
+
+        .category-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .category-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .category-count {
+            display: inline-block;
+            background: var(--bg-tertiary);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Trust Section */
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .trust-badge {
+            background: var(--bg-secondary);
+            padding: 2.5rem 2rem;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .trust-badge:hover {
+            transform: translateY(-5px);
+            border-color: var(--success);
+        }
+
+        .trust-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trust-badge h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .trust-badge p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Revenue Model */
+        .revenue-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+
+        .revenue-card {
+            background: var(--bg-secondary);
+            padding: 3rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .revenue-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--accent-gradient);
+        }
+
+        .revenue-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .revenue-icon {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .revenue-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .revenue-amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .revenue-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--accent-gradient);
+            border-radius: 40px;
+            padding: 6rem 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--bg-primary);
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-outline-white {
+            background: transparent;
+            color: white;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            border: 3px solid white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-white:hover {
+            background: white;
+            color: var(--accent-secondary);
+            transform: translateY(-5px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 4rem 0 2rem;
+            margin-top: 8rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
+        }
+
+        .social-link:hover {
+            background: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid var(--border);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: var(--bg-tertiary);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--error);
+            transform: rotate(90deg);
+        }
+
+        .app-interface {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .sidebar {
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sidebar-item {
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .main-content {
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            padding: 2rem;
+            min-height: 600px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+
+        .filter-btn {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .listing-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .listing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-primary);
+        }
+
+        .listing-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .listing-info {
+            padding: 1.5rem;
+        }
+
+        .listing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .listing-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .verified-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .listing-location {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .listing-specs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .spec-item {
+            background: var(--bg-tertiary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .listing-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .price {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .price-unit {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Sora', sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-input {
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .equipment-showcase {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .hero-text p {
+                font-size: 1.1rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .problem-grid, .revenue-cards, .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-container::before {
+                display: none;
+            }
+
+            .trust-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section {
+                padding: 4rem 2rem;
+            }
+
+            .cta-section h2 {
+                font-size: 2.5rem;
+            }
+
+            .app-interface {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <div class="logo">BluePrint</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#how-it-works">How it Works</a>
+                <a href="#categories">Categories</a>
+                <a href="#pricing">Pricing</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+                <button class="btn-primary" onclick="openModal('browse')">Browse Equipment</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>
+                        Rent Fleet & Equipment <span class="gradient-text">On-Demand</span>
+                    </h1>
+                    <p style="font-size: 0.95rem; color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem; margin-top: -0.5rem;">
+                        A BluePrint Company Initiative
+                    </p>
+                    <p>
+                        Africa's first comprehensive marketplace connecting equipment owners with businesses and individuals who need vehicles, machinery, and tools—when they need them.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary" onclick="openModal('signup-renter')">Find Equipment</button>
+                        <button class="btn-secondary" onclick="openModal('signup-owner')">List Your Fleet</button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">2,500+</span>
+                            <span class="stat-label">Listed Equipment</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">850+</span>
+                            <span class="stat-label">Verified Owners</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">98%</span>
+                            <span class="stat-label">Success Rate</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="equipment-showcase">
+                        <div class="equipment-card">
+                            <div class="equipment-image">🚛</div>
+                            <div class="equipment-info">
+                                <h3>Heavy Truck</h3>
+                                <div class="equipment-price">P450<span style="font-size: 0.6em; opacity: 0.7;">/day</span></div>
+                                <span class="equipment-available">✓ Available Now</span>
+                            </div>
+                        </div>
+                        <div class="equipment-card">
+                            <div class="equipment-image">🚜</div>
+                            <div class="equipment-info">
+                                <h3>Excavator</h3>
+                                <div class="equipment-price">P850<span style="font-size: 0.6em; opacity: 0.7;">/day</span></div>
+                                <span class="equipment-available">✓ Available Now</span>
+                            </div>
+                        </div>
+                        <div class="equipment-card">
+                            <div class="equipment-image">🏗️</div>
+                            <div class="equipment-info">
+                                <h3>Tower Crane</h3>
+                                <div class="equipment-price">P1,200<span style="font-size: 0.6em; opacity: 0.7;">/day</span></div>
+                                <span class="equipment-available">✓ Available Now</span>
+                            </div>
+                        </div>
+                        <div class="equipment-card">
+                            <div class="equipment-image">🚗</div>
+                            <div class="equipment-info">
+                                <h3>Sedan Vehicle</h3>
+                                <div class="equipment-price">P250<span style="font-size: 0.6em; opacity: 0.7;">/day</span></div>
+                                <span class="equipment-available">✓ Available Now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">The Challenge</span>
+                <h2 class="section-title">Equipment Access Shouldn't Be This Hard</h2>
+                <p class="section-description">
+                    Businesses and individuals across Southern Africa face critical challenges when trying to access the equipment they need to grow and operate efficiently.
+                </p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">💰</div>
+                    <h3>Capital Locked in Idle Assets</h3>
+                    <p>
+                        Thousands of vehicles and machinery sit idle 60-70% of the time, representing billions in underutilized capital. Owners need a trusted platform to monetize these assets safely.
+                    </p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🔍</div>
+                    <h3>No Centralized Marketplace</h3>
+                    <p>
+                        Finding equipment requires endless phone calls, informal networks, and unreliable sources. There's no transparent, professional platform to discover what's available near you.
+                    </p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">⚡</div>
+                    <h3>High Barriers to Entry</h3>
+                    <p>
+                        Small businesses and contractors can't afford to purchase expensive machinery outright. Limited access to short-term rentals stifles growth and competitiveness.
+                    </p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🛡️</div>
+                    <h3>Trust and Safety Concerns</h3>
+                    <p>
+                        Without proper verification, insurance, and transparent reviews, both owners and renters face significant risks around damage, theft, and liability.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Opportunity Section -->
+    <section class="section" style="background: var(--bg-secondary); margin: 0 2rem; border-radius: 40px; padding: 6rem 0;">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Market Opportunity</span>
+                <h2 class="section-title">A $2.5B+ Untapped Market</h2>
+                <p class="section-description">
+                    The equipment rental market in Southern Africa is experiencing explosive growth, driven by infrastructure development, construction booms, and the shift to asset-light business models.
+                </p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card" style="background: var(--bg-tertiary);">
+                    <div class="problem-icon">📈</div>
+                    <h3>15% Annual Growth</h3>
+                    <p>
+                        Regional construction and infrastructure sectors are growing at 15% CAGR, creating unprecedented demand for flexible equipment access without capital investment.
+                    </p>
+                </div>
+                <div class="problem-card" style="background: var(--bg-tertiary);">
+                    <div class="problem-icon">🌍</div>
+                    <h3>Regional Expansion Ready</h3>
+                    <p>
+                        Start in South Africa, Botswana, and Namibia, then rapidly scale to Zimbabwe, Zambia, Mozambique, and beyond. One platform for the entire region.
+                    </p>
+                </div>
+                <div class="problem-card" style="background: var(--bg-tertiary);">
+                    <div class="problem-icon">💼</div>
+                    <h3>B2B and B2C Demand</h3>
+                    <p>
+                        Serve construction companies, logistics firms, event planners, farmers, and individual contractors—all needing short-term access to specialized equipment.
+                    </p>
+                </div>
+                <div class="problem-card" style="background: var(--bg-tertiary);">
+                    <div class="problem-icon">🚀</div>
+                    <h3>First-Mover Advantage</h3>
+                    <p>
+                        No established digital platform exists. Capture market share quickly before international players enter or local competitors emerge.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Simple Process</span>
+                <h2 class="section-title">How FleetHub Works</h2>
+                <p class="section-description">
+                    Get the equipment you need in three simple steps, with full transparency and security built in.
+                </p>
+            </div>
+            <div class="how-it-works">
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Search & Discover</h3>
+                        <p>
+                            Browse thousands of verified equipment listings. Filter by location, type, availability, and price. View detailed specs, photos, and owner ratings.
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Book & Pay Securely</h3>
+                        <p>
+                            Select your dates, choose insurance coverage, and complete secure payment. Your deposit is held safely until the rental is complete.
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Use & Return</h3>
+                        <p>
+                            Pick up or get delivery, use the equipment, and return it on time. Rate your experience and build your reputation on the platform.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Equipment Categories Section -->
+    <section class="section" id="categories">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Browse By Category</span>
+                <h2 class="section-title">Every Type of Equipment You Need</h2>
+                <p class="section-description">
+                    From passenger vehicles to heavy construction machinery, find exactly what you're looking for.
+                </p>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card" onclick="openModal('browse')">
+                    <div class="category-icon">🚗</div>
+                    <h3>Passenger Vehicles</h3>
+                    <p>Sedans, SUVs, and luxury cars for personal and business use</p>
+                    <span class="category-count">340+ Available</span>
+                </div>
+                <div class="category-card" onclick="openModal('browse')">
+                    <div class="category-icon">🚛</div>
+                    <h3>Trucks & Logistics</h3>
+                    <p>Delivery vans, box trucks, and freight vehicles</p>
+                    <span class="category-count">180+ Available</span>
+                </div>
+                <div class="category-card" onclick="openModal('browse')">
+                    <div class="category-icon">🏗️</div>
+                    <h3>Construction Equipment</h3>
+                    <p>Excavators, bulldozers, cranes, and loaders</p>
+                    <span class="category-count">420+ Available</span>
+                </div>
+                <div class="category-card" onclick="openModal('browse')">
+                    <div class="category-icon">🚜</div>
+                    <h3>Agricultural Machinery</h3>
+                    <p>Tractors, harvesters, and farming equipment</p>
+                    <span class="category-count">95+ Available</span>
+                </div>
+                <div class="category-card" onclick="openModal('browse')">
+                    <div class="category-icon">⚙️</div>
+                    <h3>Industrial Tools</h3>
+                    <p>Power tools, generators, compressors, and welders</p>
+                    <span class="category-count">560+ Available</span>
+                </div>
+                <div class="category-card" onclick="openModal('browse')">
+                    <div class="category-icon">🎪</div>
+                    <h3>Event & Specialty</h3>
+                    <p>Staging, lighting, sound, and event equipment</p>
+                    <span class="category-count">120+ Available</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust & Safety Section -->
+    <section class="section" style="background: var(--bg-secondary); margin: 0 2rem; border-radius: 40px; padding: 6rem 0;">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Trust & Safety</span>
+                <h2 class="section-title">Built on Security and Trust</h2>
+                <p class="section-description">
+                    Every transaction is protected by multiple layers of verification, insurance, and support.
+                </p>
+            </div>
+            <div class="trust-grid">
+                <div class="trust-badge">
+                    <div class="trust-icon">✓</div>
+                    <h4>KYC Verification</h4>
+                    <p>All users undergo identity verification before accessing the platform</p>
+                </div>
+                <div class="trust-badge">
+                    <div class="trust-icon">🛡️</div>
+                    <h4>Insurance Coverage</h4>
+                    <p>Comprehensive damage and liability protection for every rental</p>
+                </div>
+                <div class="trust-badge">
+                    <div class="trust-icon">⭐</div>
+                    <h4>Rating System</h4>
+                    <p>Transparent reviews and ratings build community trust</p>
+                </div>
+                <div class="trust-badge">
+                    <div class="trust-icon">💬</div>
+                    <h4>24/7 Support</h4>
+                    <p>Dedicated customer service and dispute resolution team</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Revenue Model Section -->
+    <section class="section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Monetization</span>
+                <h2 class="section-title">Multiple Revenue Streams</h2>
+                <p class="section-description">
+                    Sustainable, scalable business model with diverse income sources.
+                </p>
+            </div>
+            <div class="revenue-cards">
+                <div class="revenue-card">
+                    <div class="revenue-icon">💳</div>
+                    <h3>Transaction Fees</h3>
+                    <div class="revenue-amount">15%</div>
+                    <p>
+                        Commission on every successful rental. Owners keep 85% of the rental fee. No upfront costs—we only earn when owners earn.
+                    </p>
+                </div>
+                <div class="revenue-card">
+                    <div class="revenue-icon">⭐</div>
+                    <h3>Premium Listings</h3>
+                    <div class="revenue-amount">P299</div>
+                    <p>
+                        Monthly subscription for featured placement, priority in search results, and enhanced analytics for owners with multiple assets.
+                    </p>
+                </div>
+                <div class="revenue-card">
+                    <div class="revenue-icon">🛡️</div>
+                    <h3>Insurance Add-Ons</h3>
+                    <div class="revenue-amount">8-12%</div>
+                    <p>
+                        Optional comprehensive coverage packages for renters, partnered with leading insurers. Revenue share on every policy sold.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section">
+        <div class="container">
+            <div class="cta-section">
+                <div class="cta-content">
+                    <h2>Ready to Transform Equipment Rental?</h2>
+                    <p>
+                        Join thousands of owners earning passive income from their idle assets. List your fleet today and start generating revenue within 48 hours.
+                    </p>
+                    <div class="cta-buttons">
+                        <button class="btn-white" onclick="openModal('signup-owner')">Start Earning Today</button>
+                        <button class="btn-outline-white" onclick="openModal('browse')">Browse Equipment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>BluePrint</h3>
+                    <p>
+                        A BluePrint Company initiative. Africa's premier equipment and vehicle rental marketplace, connecting owners and renters across Southern Africa with trust, transparency, and technology.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">💼</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">Browse Equipment</a></li>
+                        <li><a href="#">List Your Fleet</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Trust & Safety</a></li>
+                        <li><a href="#">Insurance</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Investors</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press Kit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2026 BluePrint Fleet. A BluePrint Company. All rights reserved. | Privacy Policy | Terms of Service
+            </div>
+        </div>
+    </footer>
+
+    <!-- Browse Equipment Modal -->
+    <div id="browseModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('browse')">&times;</button>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">BluePrint Fleet - Browse Equipment</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Find the perfect equipment for your needs</p>
+            
+            <div class="app-interface">
+                <div class="sidebar">
+                    <div class="sidebar-item active">🏠 All Equipment</div>
+                    <div class="sidebar-item">🚗 Vehicles</div>
+                    <div class="sidebar-item">🚛 Trucks</div>
+                    <div class="sidebar-item">🏗️ Construction</div>
+                    <div class="sidebar-item">🚜 Agricultural</div>
+                    <div class="sidebar-item">⚙️ Tools</div>
+                </div>
+                
+                <div class="main-content">
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="Search by equipment name, location, or category...">
+                        <button class="filter-btn">🔍 Filters</button>
+                    </div>
+                    
+                    <div class="equipment-grid">
+                        <div class="listing-card">
+                            <div class="listing-image">🚛</div>
+                            <div class="listing-info">
+                                <div class="listing-header">
+                                    <div>
+                                        <div class="listing-title">Isuzu 10-Ton Truck</div>
+                                        <span class="verified-badge">✓ Verified Owner</span>
+                                    </div>
+                                </div>
+                                <div class="listing-location">📍 Johannesburg, Gauteng</div>
+                                <div class="listing-specs">
+                                    <span class="spec-item">10 Tons</span>
+                                    <span class="spec-item">2021 Model</span>
+                                    <span class="spec-item">Manual</span>
+                                </div>
+                                <div class="listing-price">
+                                    <div>
+                                        <span class="price">P450</span>
+                                        <span class="price-unit">/day</span>
+                                    </div>
+                                    <div class="rating">⭐ 4.9 (28)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-card">
+                            <div class="listing-image">🏗️</div>
+                            <div class="listing-info">
+                                <div class="listing-header">
+                                    <div>
+                                        <div class="listing-title">CAT Excavator 320</div>
+                                        <span class="verified-badge">✓ Verified Owner</span>
+                                    </div>
+                                </div>
+                                <div class="listing-location">📍 Pretoria, Gauteng</div>
+                                <div class="listing-specs">
+                                    <span class="spec-item">20 Ton</span>
+                                    <span class="spec-item">2019</span>
+                                    <span class="spec-item">Hydraulic</span>
+                                </div>
+                                <div class="listing-price">
+                                    <div>
+                                        <span class="price">P1,850</span>
+                                        <span class="price-unit">/day</span>
+                                    </div>
+                                    <div class="rating">⭐ 5.0 (45)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-card">
+                            <div class="listing-image">🚜</div>
+                            <div class="listing-info">
+                                <div class="listing-header">
+                                    <div>
+                                        <div class="listing-title">John Deere Tractor</div>
+                                        <span class="verified-badge">✓ Verified Owner</span>
+                                    </div>
+                                </div>
+                                <div class="listing-location">📍 Gaborone, Botswana</div>
+                                <div class="listing-specs">
+                                    <span class="spec-item">120 HP</span>
+                                    <span class="spec-item">2020</span>
+                                    <span class="spec-item">Diesel</span>
+                                </div>
+                                <div class="listing-price">
+                                    <div>
+                                        <span class="price">P680</span>
+                                        <span class="price-unit">/day</span>
+                                    </div>
+                                    <div class="rating">⭐ 4.8 (32)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-card">
+                            <div class="listing-image">🚗</div>
+                            <div class="listing-info">
+                                <div class="listing-header">
+                                    <div>
+                                        <div class="listing-title">Toyota Corolla 2022</div>
+                                        <span class="verified-badge">✓ Verified Owner</span>
+                                    </div>
+                                </div>
+                                <div class="listing-location">📍 Cape Town, Western Cape</div>
+                                <div class="listing-specs">
+                                    <span class="spec-item">Sedan</span>
+                                    <span class="spec-item">2022</span>
+                                    <span class="spec-item">Automatic</span>
+                                </div>
+                                <div class="listing-price">
+                                    <div>
+                                        <span class="price">P290</span>
+                                        <span class="price-unit">/day</span>
+                                    </div>
+                                    <div class="rating">⭐ 4.9 (67)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-card">
+                            <div class="listing-image">⚙️</div>
+                            <div class="listing-info">
+                                <div class="listing-header">
+                                    <div>
+                                        <div class="listing-title">Generator 50kVA</div>
+                                        <span class="verified-badge">✓ Verified Owner</span>
+                                    </div>
+                                </div>
+                                <div class="listing-location">📍 Durban, KwaZulu-Natal</div>
+                                <div class="listing-specs">
+                                    <span class="spec-item">50kVA</span>
+                                    <span class="spec-item">Diesel</span>
+                                    <span class="spec-item">Silent</span>
+                                </div>
+                                <div class="listing-price">
+                                    <div>
+                                        <span class="price">P180</span>
+                                        <span class="price-unit">/day</span>
+                                    </div>
+                                    <div class="rating">⭐ 5.0 (23)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="listing-card">
+                            <div class="listing-image">🏗️</div>
+                            <div class="listing-info">
+                                <div class="listing-header">
+                                    <div>
+                                        <div class="listing-title">Mobile Tower Crane</div>
+                                        <span class="verified-badge">✓ Verified Owner</span>
+                                    </div>
+                                </div>
+                                <div class="listing-location">📍 Windhoek, Namibia</div>
+                                <div class="listing-specs">
+                                    <span class="spec-item">40m Reach</span>
+                                    <span class="spec-item">2018</span>
+                                    <span class="spec-item">Mobile</span>
+                                </div>
+                                <div class="listing-price">
+                                    <div>
+                                        <span class="price">P2,200</span>
+                                        <span class="price-unit">/day</span>
+                                    </div>
+                                    <div class="rating">⭐ 4.7 (15)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Renter Modal -->
+    <div id="signupRenterModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" onclick="closeModal('signup-renter')">&times;</button>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Join BluePrint Fleet</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Create your account to start booking equipment</p>
+            
+            <form onsubmit="handleSignup(event, 'renter')">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-input" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-input" placeholder="Doe" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="form-input" placeholder="john@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" class="form-input" placeholder="+267 7X XXX XXX" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Country</label>
+                    <select class="form-input" required>
+                        <option value="">Select Country</option>
+                        <option value="bw">Botswana</option>
+                        <option value="za">South Africa</option>
+                        <option value="na">Namibia</option>
+                        <option value="zw">Zimbabwe</option>
+                        <option value="zm">Zambia</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Create Account</button>
+                
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                    Already have an account? <a href="#" style="color: var(--accent-primary); font-weight: 600;">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Owner Modal -->
+    <div id="signupOwnerModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="modal-close" onclick="closeModal('signup-owner')">&times;</button>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">List on BluePrint Fleet</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Start earning from your idle equipment today</p>
+            
+            <form onsubmit="handleSignup(event, 'owner')">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name / Business Name</label>
+                        <input type="text" class="form-input" placeholder="Your name or company" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-input" placeholder="Surname" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <select class="form-input" required>
+                        <option value="">Select Type</option>
+                        <option value="individual">Individual Owner</option>
+                        <option value="company">Company/Business</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" class="form-input" placeholder="owner@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-input" placeholder="+267 7X XXX XXX" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Country</label>
+                    <select class="form-input" required>
+                        <option value="">Select Country</option>
+                        <option value="bw">Botswana</option>
+                        <option value="za">South Africa</option>
+                        <option value="na">Namibia</option>
+                        <option value="zw">Zimbabwe</option>
+                        <option value="zm">Zambia</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Number of Equipment/Vehicles</label>
+                    <select class="form-input" required>
+                        <option value="">Select Range</option>
+                        <option value="1-5">1-5 items</option>
+                        <option value="6-20">6-20 items</option>
+                        <option value="21-50">21-50 items</option>
+                        <option value="50+">50+ items</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Start Listing Equipment</button>
+                
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                    Already registered? <a href="#" style="color: var(--accent-primary); font-weight: 600;">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        // Modal Functions
+        function openModal(type) {
+            if (type === 'browse') {
+                document.getElementById('browseModal').classList.add('active');
+            } else if (type === 'signup-renter') {
+                document.getElementById('signupRenterModal').classList.add('active');
+            } else if (type === 'signup-owner') {
+                document.getElementById('signupOwnerModal').classList.add('active');
+            }
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(type) {
+            if (type === 'browse') {
+                document.getElementById('browseModal').classList.remove('active');
+            } else if (type === 'signup-renter') {
+                document.getElementById('signupRenterModal').classList.remove('active');
+            } else if (type === 'signup-owner') {
+                document.getElementById('signupOwnerModal').classList.remove('active');
+            }
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on background click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Handle signup
+        function handleSignup(event, type) {
+            event.preventDefault();
+            alert(`Thank you for signing up as a ${type}! Your account is being created. You'll receive a verification email shortly.`);
+            closeModal(`signup-${type}`);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to nav
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                nav.style.boxShadow = 'var(--shadow)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
